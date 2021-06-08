@@ -1,4 +1,6 @@
 setup.py
+shiny_dollop/__init__.py
+shiny_dollop/vcfparser_tables.py
 shiny_dollop.egg-info/PKG-INFO
 shiny_dollop.egg-info/SOURCES.txt
 shiny_dollop.egg-info/dependency_links.txt

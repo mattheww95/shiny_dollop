@@ -11,6 +11,7 @@ setup(
     description='Script for reorganizing Results data',
     zip_safe=False,
     install_requires=["pandas>=1.2.3", "openpyxl>=3.0.7", "setuptools>=49.6.0"],
-    entry_points={'console_scripts':
-                      ['bergen=build.lib.shiny_dollop.vcfparser_tables.main', ], }
+    entry_points={'console_scripts': ['shiny_dollop=shiny_dollop.vcfparser_tables:main'],
+                  }
 )
+#"build/lib/shiny_dollop/vcfparser_tables.py"
