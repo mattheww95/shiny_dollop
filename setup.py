@@ -12,5 +12,5 @@ setup(
     zip_safe=False,
     install_requires=["pandas>=1.2.3", "openpyxl>=3.0.7", "setuptools>=49.6.0"],
     entry_points={'console_scripts':
-                      ['bergen=shiny_dollop.build.lib.shiny_dollop.vcfparser_tables.main', ], }
+                      ['bergen=build.lib.shiny_dollop.vcfparser_tables.main', ], }
 )
