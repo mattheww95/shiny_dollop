@@ -1,0 +1,3 @@
+[console_scripts]
+bergen = List_mutations.build.lib.shiny_dollop.vcfparser_tables.main
+
