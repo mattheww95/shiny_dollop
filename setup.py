@@ -1,9 +1,9 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='shiny_dollop',
     version='1.0',
-    packages=['shiny_dollop'],
+    packages=find_packages(),
     url='',
     license='',
     author='Matthew Wells',
