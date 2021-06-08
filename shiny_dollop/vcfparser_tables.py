@@ -89,12 +89,14 @@ def format_muts(INPUT):
                     #print(uk_clean)
                     big_list.append([ii, i, "  ".join(uk_clean), str(len_uk) + " \\ " + str(len(df["UK"].index)-2),
                                      var_dict[i][0][ii], var_dict[i][1][ii], var_dict[i][2][ii]])
+                    uk_clean = None
                 elif 'C14676T|Orf1b:P403P' and 'A28095T|Orf8:K68Stop' in dict_vars[i][ii]:
                     len_uk -= 2
                     uk_clean = clean_lists(dict_vars[i][ii])
                     #print(uk_clean)
                     big_list.append([ii, i, "  ".join(uk_clean), str(len_uk) + " \\ " + str(len(df["UK"].index)-2),
                                      var_dict[i][0][ii], var_dict[i][1][ii], var_dict[i][2][ii]])
+                    uk_clean = None
                 else:
                     uk_clean = clean_lists(dict_vars[i][ii])
                     #print(uk_clean, "else", dict_vars[i][ii])
@@ -108,11 +110,13 @@ def format_muts(INPUT):
                 sa_clean = clean_lists(dict_vars[i][ii])
                 big_list.append([ii, i, "  ".join(sa_clean), str(len_sa) + " \\ " + str(len(df["SA"].index)-2),
                                  var_dict[i][0][ii], var_dict[i][1][ii], var_dict[i][2][ii]])
+                sa_clean = None
             else:
                 else_clean = clean_lists(dict_vars[i][ii])
                 big_list.append([ii, i, "  ".join(else_clean), str(len(dict_vars[i][ii])) + " \\ " +
                                  str(len(df[i].index)-2),
                                  var_dict[i][0][ii], var_dict[i][1][ii], var_dict[i][2][ii]])
+                else_clean = None
     df_return = pd.DataFrame(big_list, columns=["sample", "VOC", "mutations", "Proportion", "Average", "Max", "Min"])
     return df_return
 
