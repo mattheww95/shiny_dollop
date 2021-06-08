@@ -5,6 +5,18 @@ import sys
 
 # find all heatmap_data2plot_WPG_on_WPG_20210602_vcfparser.txt.xlsx in folder
 
+# need to report AA changes only
+
+
+def clean_lists(some_list):
+    ret_list = []
+    if len(some_list) >= 1:
+        for i in some_list:
+            # print(i[i.index("|")+1:])
+            ret_list.append(i[i.index("|")+1:])
+        return ret_list
+    return ret_list
+
 
 def format_muts(INPUT):
     df = pd.read_excel(io=INPUT, engine='openpyxl', sheet_name=None)
@@ -73,25 +85,36 @@ def format_muts(INPUT):
                 if 'A28095T|Orf8:K68Stop' in dict_vars[i][ii] or 'C14676T|Orf1b:P403P' in dict_vars[i][ii] and \
                         ('C14676T|Orf1b:P403P' and 'A28095T|Orf8:K68Stop') not in dict_vars[i][ii]:
                     len_uk -= 1
-                    big_list.append([ii, i, " ".join(dict_vars[i][ii]), str(len_uk) + "/" + str(len(df["UK"].index)-2),
+                    uk_clean = clean_lists(dict_vars[i][ii])
+                    big_list.append([ii, i, "  ".join(uk_clean), str(len_uk) + " \\ " + str(len(df["UK"].index)-2),
                                      var_dict[i][0][ii], var_dict[i][1][ii], var_dict[i][2][ii]])
+                    uk_clean = None
                 elif 'C14676T|Orf1b:P403P' and 'A28095T|Orf8:K68Stop' in dict_vars[i][ii]:
                     len_uk -= 2
-                    big_list.append([ii, i, " ".join(dict_vars[i][ii]), str(len_uk) + "/" + str(len(df["UK"].index)-2),
+                    uk_clean = clean_lists(dict_vars[i][ii])
+                    big_list.append([ii, i, "  ".join(uk_clean), str(len_uk) + " \\ " + str(len(df["UK"].index)-2),
                                      var_dict[i][0][ii], var_dict[i][1][ii], var_dict[i][2][ii]])
+                    uk_clean = None
                 else:
-                    big_list.append([ii, i, " ".join(dict_vars[i][ii]), str(len_uk) + "/" + str(len(df["UK"].index)-2),
+                    uk_clean = clean_lists(dict_vars[i][ii])
+                    big_list.append([ii, i, "  ".join(uk_clean), str(len_uk) + " \\ " + str(len(df["UK"].index)-2),
                                      var_dict[i][0][ii], var_dict[i][1][ii], var_dict[i][2][ii]])
+                    uk_clean = None
             elif i == "SA":
                 len_sa = len(dict_vars[i][ii])
                 if 'G22813T|S:K417N' in dict_vars[i][ii]:
                     len_sa -= 1
-                big_list.append([ii, i, " ".join(dict_vars[i][ii]), str(len_sa) + "/" + str(len(df["SA"].index)-2),
+                sa_clean = clean_lists(dict_vars[i][ii])
+                big_list.append([ii, i, "  ".join(sa_clean), str(len_sa) + " \\ " + str(len(df["SA"].index)-2),
                                  var_dict[i][0][ii], var_dict[i][1][ii], var_dict[i][2][ii]])
+                sa_clean = None
             else:
-                big_list.append([ii, i, " ".join(dict_vars[i][ii]), str(len(dict_vars[i][ii])) + "/" + str(len(df[i].index)-2),
+                else_clean = clean_lists(dict_vars[i][ii])
+                big_list.append([ii, i, "  ".join(else_clean), str(len(dict_vars[i][ii])) + " \\ " +
+                                 str(len(df[i].index)-2),
                                  var_dict[i][0][ii], var_dict[i][1][ii], var_dict[i][2][ii]])
-    df_return = pd.DataFrame(big_list, columns=["sample", "VOC", "Proportion", "mutations", "Average", "Max", "Min"])
+                else_clean = None
+    df_return = pd.DataFrame(big_list, columns=["sample", "VOC", "mutations", "Proportion", "Average", "Max", "Min"])
     return df_return
 
 
@@ -132,7 +155,7 @@ def main():
     walk_path = ""
     parser = argparse.ArgumentParser(description="Reformat results directories")
     parser.add_argument('-p', '--path', action='store', default=os.getcwd(), help="Path to directory containing results")
-    all_samples = pd.DataFrame(columns=["sample", "VOC", "Proportion", "mutations", "Average", "Max", "Min"])
+    all_samples = pd.DataFrame(columns=["sample", "VOC", "mutations", "Proportion", "Average", "Max", "Min"])
     parsed_args = parser.parse_args()
     print(parsed_args.path)
     if check_in_right_dir(parsed_args.path):
