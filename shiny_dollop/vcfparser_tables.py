@@ -44,7 +44,7 @@ def format_muts(INPUT):
                     # print(temp_d[iii][0], iii, nucs)
                     # print(dict_vars[i][iii], dict_vars[i])
                     dict_vars[i][iii].append(nucs)
-                elif f != "A28095T|Orf8:K68Stop" or f != 'C14676T|Orf1b:P403P':
+                elif i == 'UK' and f != "A28095T|Orf8:K68Stop" and f != 'C14676T|Orf1b:P403P':
                     dict_vars[i][iii].append(nucs)
 
 
