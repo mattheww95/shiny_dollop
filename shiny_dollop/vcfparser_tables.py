@@ -39,13 +39,13 @@ def format_muts(INPUT):
             nucs = temp_d["NucName+AAName"][0]
             of_int = list(temp_d.keys())[1:]
             for iii in of_int:
-                if temp_d[iii][0] != 0.0 and (i != "UK" and
-                                              (f != "A28095T|Orf8:K68Stop" or f != 'C14676T|Orf1b:P403P')):
+                # TODO clean this up when awake next
+                if temp_d[iii][0] != 0.0 and (i != "UK" and (f != "A28095T|Orf8:K68Stop" or f != 'C14676T|Orf1b:P403P')):
                     # print(temp_d[iii][0], iii, nucs)
                     # print(dict_vars[i][iii], dict_vars[i])
                     dict_vars[i][iii].append(nucs)
-                else:
-                    continue
+                elif f != "A28095T|Orf8:K68Stop" or f != 'C14676T|Orf1b:P403P':
+                    dict_vars[i][iii].append(nucs)
 
 
     # This part is to get the averages:
@@ -86,15 +86,18 @@ def format_muts(INPUT):
                         ('C14676T|Orf1b:P403P' and 'A28095T|Orf8:K68Stop') not in dict_vars[i][ii]:
                     len_uk -= 1
                     uk_clean = clean_lists(dict_vars[i][ii])
+                    #print(uk_clean)
                     big_list.append([ii, i, "  ".join(uk_clean), str(len_uk) + " \\ " + str(len(df["UK"].index)-2),
                                      var_dict[i][0][ii], var_dict[i][1][ii], var_dict[i][2][ii]])
                 elif 'C14676T|Orf1b:P403P' and 'A28095T|Orf8:K68Stop' in dict_vars[i][ii]:
                     len_uk -= 2
                     uk_clean = clean_lists(dict_vars[i][ii])
+                    #print(uk_clean)
                     big_list.append([ii, i, "  ".join(uk_clean), str(len_uk) + " \\ " + str(len(df["UK"].index)-2),
                                      var_dict[i][0][ii], var_dict[i][1][ii], var_dict[i][2][ii]])
                 else:
                     uk_clean = clean_lists(dict_vars[i][ii])
+                    #print(uk_clean, "else", dict_vars[i][ii])
                     big_list.append([ii, i, "  ".join(uk_clean), str(len_uk) + " \\ " + str(len(df["UK"].index)-2),
                                      var_dict[i][0][ii], var_dict[i][1][ii], var_dict[i][2][ii]])
                     uk_clean = None

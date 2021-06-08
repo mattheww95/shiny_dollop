@@ -1,3 +1,4 @@
+README.md
 setup.py
 shiny_dollop/__init__.py
 shiny_dollop/vcfparser_tables.py
