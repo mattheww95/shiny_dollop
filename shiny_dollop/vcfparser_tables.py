@@ -48,7 +48,9 @@ def format_muts(INPUT):
             nucs = temp_d["NucName+AAName"][0]
             of_int = list(temp_d.keys())[1:]
             for iii in of_int:
-                dict_vars[i][iii].append(nucs)
+                if temp_d[iii][0] != 0.0:
+                    # print(temp_d[iii][0])
+                    dict_vars[i][iii].append(nucs)
 
 
     # This part is to get the averages:
@@ -68,10 +70,10 @@ def format_muts(INPUT):
     for i in dict_vars.keys():
         for ii in dict_vars[i].keys():  # this output is good, maybe ignore teh string though
             else_clean = clean_lists(dict_vars[i][ii])
-            big_list.append([ii, i, "  ".join(else_clean), str(len(dict_vars[i][ii])) + " \\ " +
+            big_list.append([ii, i, "  ".join(else_clean), str(len(else_clean)) + " \\ " +
                              str(len(df[i].index)),
                              var_dict[i][0][ii], var_dict[i][1][ii], var_dict[i][2][ii]])
-            # print(len(df[i].index), len(dict_vars[i][ii]))
+            #print(len(df[i].index), len(dict_vars[i][ii]))
     df_return = pd.DataFrame(big_list, columns=["sample", "VOC", "mutations", "Proportion", "Average", "Max", "Min"])
     return df_return
 
