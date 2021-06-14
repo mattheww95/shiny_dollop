@@ -25,6 +25,15 @@ def format_muts(INPUT):
     dict_vars = {}
     sample_avgs = {}
     for i in df.keys():
+
+        if i == "UK":
+            temp_df = df[i].loc[df[i]["NucName+AAName"] != "A28095T|Orf8:K68Stop"]
+            temp_df = temp_df.loc[df[i]["NucName+AAName"] != 'C14676T|Orf1b:P403P']
+            df[i] = temp_df
+        elif i == "SA":
+            temp_df = df[i].loc[df[i]["NucName+AAName"] != 'G22813T|S:K417N']
+            df[i] = temp_df
+
         cur_v = df[i]
         samples = list(cur_v.iloc[:, 13:].columns)
         nuc_list = cur_v.iloc[:, 12:]
@@ -39,84 +48,30 @@ def format_muts(INPUT):
             nucs = temp_d["NucName+AAName"][0]
             of_int = list(temp_d.keys())[1:]
             for iii in of_int:
-                # TODO clean this up when awake next
-                if temp_d[iii][0] != 0.0 and (i != "UK" and (f != "A28095T|Orf8:K68Stop" or f != 'C14676T|Orf1b:P403P')):
-                    # print(temp_d[iii][0], iii, nucs)
-                    # print(dict_vars[i][iii], dict_vars[i])
-                    dict_vars[i][iii].append(nucs)
-                elif i == 'UK' and f != "A28095T|Orf8:K68Stop" and f != 'C14676T|Orf1b:P403P':
-                    dict_vars[i][iii].append(nucs)
+                dict_vars[i][iii].append(nucs)
 
 
     # This part is to get the averages:
     var_dict = {}
     for i in df.keys():
-        cur_v = df[i]
+        cur_v = df[i] # already dropped uk nucs and SA nucs
         temp = None
         maxes = None
         mins = None
-        if str(i) == "UK":
-            cur_v = cur_v.loc[cur_v["NucName+AAName"] != 'A28095T|Orf8:K68Stop']
-            cur_v = cur_v.loc[cur_v["NucName+AAName"] != 'C14676T|Orf1b:P403P']
-            samples = cur_v.iloc[:, 13:]
-            temp = samples.mean(axis=0)
-            maxes = samples.max(axis=0)
-            mins = samples.min(axis=0)
-            var_dict[i] = [temp.to_dict(), maxes.to_dict(), mins.to_dict()]
-        elif i == 'SA':
-            cur_v = cur_v.loc[cur_v["NucName+AAName"] != 'G22813T|S:K417N']
-            samples = cur_v.iloc[:, 13:]
-            temp = samples.mean(axis=0)
-            maxes = samples.max(axis=0)
-            mins = samples.min(axis=0)
-            var_dict[i] = [temp.to_dict(), maxes.to_dict(), mins.to_dict()]
-        else:
-            samples = cur_v.iloc[:, 13:]
-            temp = samples.mean(axis=0)
-            maxes = samples.max(axis=0)
-            mins = samples.min(axis=0)
-            var_dict[i] = [temp.to_dict(), maxes.to_dict(), mins.to_dict()]
+        samples = cur_v.iloc[:, 13:]
+        temp = samples.mean(axis=0)
+        maxes = samples.max(axis=0)
+        mins = samples.min(axis=0)
+        var_dict[i] = [temp.to_dict(), maxes.to_dict(), mins.to_dict()]
 
     big_list = []  # Making one large list to append to the returning dataframe
     for i in dict_vars.keys():
         for ii in dict_vars[i].keys():  # this output is good, maybe ignore teh string though
-            if i == "UK":
-                len_uk = len(dict_vars[i][ii])
-                if 'A28095T|Orf8:K68Stop' in dict_vars[i][ii] or 'C14676T|Orf1b:P403P' in dict_vars[i][ii] and \
-                        ('C14676T|Orf1b:P403P' and 'A28095T|Orf8:K68Stop') not in dict_vars[i][ii]:
-                    len_uk -= 1
-                    uk_clean = clean_lists(dict_vars[i][ii])
-                    #print(uk_clean)
-                    big_list.append([ii, i, "  ".join(uk_clean), str(len_uk) + " \\ " + str(len(df["UK"].index)-2),
-                                     var_dict[i][0][ii], var_dict[i][1][ii], var_dict[i][2][ii]])
-                    uk_clean = None
-                elif 'C14676T|Orf1b:P403P' and 'A28095T|Orf8:K68Stop' in dict_vars[i][ii]:
-                    len_uk -= 2
-                    uk_clean = clean_lists(dict_vars[i][ii])
-                    #print(uk_clean)
-                    big_list.append([ii, i, "  ".join(uk_clean), str(len_uk) + " \\ " + str(len(df["UK"].index)-2),
-                                     var_dict[i][0][ii], var_dict[i][1][ii], var_dict[i][2][ii]])
-                    uk_clean = None
-                else:
-                    uk_clean = clean_lists(dict_vars[i][ii])
-                    #print(uk_clean, "else", dict_vars[i][ii])
-                    big_list.append([ii, i, "  ".join(uk_clean), str(len_uk) + " \\ " + str(len(df["UK"].index)-2),
-                                     var_dict[i][0][ii], var_dict[i][1][ii], var_dict[i][2][ii]])
-                    uk_clean = None
-            elif i == "SA":
-                len_sa = len(dict_vars[i][ii])
-                if 'G22813T|S:K417N' in dict_vars[i][ii]:
-                    len_sa -= 1
-                sa_clean = clean_lists(dict_vars[i][ii])
-                big_list.append([ii, i, "  ".join(sa_clean), str(len_sa) + " \\ " + str(len(df["SA"].index)-2),
-                                 var_dict[i][0][ii], var_dict[i][1][ii], var_dict[i][2][ii]])
-                sa_clean = None
-            else:
-                else_clean = clean_lists(dict_vars[i][ii])
-                big_list.append([ii, i, "  ".join(else_clean), str(len(dict_vars[i][ii])) + " \\ " +
-                                 str(len(df[i].index)-2),
-                                 var_dict[i][0][ii], var_dict[i][1][ii], var_dict[i][2][ii]])
-                else_clean = None
+            else_clean = clean_lists(dict_vars[i][ii])
+            big_list.append([ii, i, "  ".join(else_clean), str(len(dict_vars[i][ii])) + " \\ " +
+                             str(len(df[i].index)),
+                             var_dict[i][0][ii], var_dict[i][1][ii], var_dict[i][2][ii]])
+            print(len(df[i].index), len(dict_vars[i][ii]))
     df_return = pd.DataFrame(big_list, columns=["sample", "VOC", "mutations", "Proportion", "Average", "Max", "Min"])
     return df_return
 
