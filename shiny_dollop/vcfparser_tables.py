@@ -71,7 +71,7 @@ def format_muts(INPUT):
             big_list.append([ii, i, "  ".join(else_clean), str(len(dict_vars[i][ii])) + " \\ " +
                              str(len(df[i].index)),
                              var_dict[i][0][ii], var_dict[i][1][ii], var_dict[i][2][ii]])
-            print(len(df[i].index), len(dict_vars[i][ii]))
+            # print(len(df[i].index), len(dict_vars[i][ii]))
     df_return = pd.DataFrame(big_list, columns=["sample", "VOC", "mutations", "Proportion", "Average", "Max", "Min"])
     return df_return
 
