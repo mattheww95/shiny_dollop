@@ -2,10 +2,47 @@ import pandas as pd
 import os
 import argparse
 import sys
+import numpy as np
+import re
+from epiweeks import Week, Year
 
 # find all heatmap_data2plot_WPG_on_WPG_20210602_vcfparser.txt.xlsx in folder
 
 # need to report AA changes only
+
+
+def slice_epi(pattern_, string_search):
+    pos_1 = pattern_.search(str(string_search), 3)
+    try:
+        pos_s = int(pos_1.span()[0])
+        print(pos_s)
+    except AttributeError:
+        pos_s = np.nan
+        print(string_search)
+
+    ret_val = str(string_search[pos_s:pos_s+2])
+    ret_val = ret_val.strip('-')
+    ret_val = ret_val.strip('C')
+    return ret_val
+
+
+pattern = re.compile(r"\d")
+
+
+def epi_date(some_val):
+    ff = some_val
+    week = None
+    if ff == np.nan:
+        # week = Week(2021, 7).enddate()
+        week = np.nan
+        print("Error", week)
+    elif int(ff) > 40:
+        week = Week(2020, int(ff))
+        week = week.enddate()
+    elif int(ff) <= 40:
+        week = Week(2021, int(ff))
+        week = week.enddate()
+    return week
 
 
 def clean_lists(some_list):
@@ -75,6 +112,10 @@ def format_muts(INPUT):
                              var_dict[i][0][ii], var_dict[i][1][ii], var_dict[i][2][ii]])
             #print(len(df[i].index), len(dict_vars[i][ii]))
     df_return = pd.DataFrame(big_list, columns=["sample", "VOC", "mutations", "Proportion", "Average", "Max", "Min"])
+    df_return["EpiWeek"] = df_return['sample'].apply(lambda x: slice_epi(pattern, str(x)))
+    for ii in df_return.index:
+        df_return.at[ii, "EndDate"] = epi_date(df.at[ii, "EpiWeek"])
+
     return df_return
 
 
