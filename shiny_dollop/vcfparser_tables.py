@@ -15,7 +15,7 @@ def slice_epi(pattern_, string_search):
     pos_1 = pattern_.search(str(string_search), 3)
     try:
         pos_s = int(pos_1.span()[0])
-        print(pos_s)
+        # print(pos_s)
     except AttributeError:
         pos_s = np.nan
         print(string_search)
