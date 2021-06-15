@@ -114,7 +114,7 @@ def format_muts(INPUT):
     df_return = pd.DataFrame(big_list, columns=["sample", "VOC", "mutations", "Proportion", "Average", "Max", "Min"])
     df_return["EpiWeek"] = df_return['sample'].apply(lambda x: slice_epi(pattern, str(x)))
     for ii in df_return.index:
-        df_return.at[ii, "EndDate"] = epi_date(df.at[ii, "EpiWeek"])
+        df_return.at[ii, "EndDate"] = epi_date(df_return.at[ii, "EpiWeek"])
 
     return df_return
 
