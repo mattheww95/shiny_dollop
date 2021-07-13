@@ -62,7 +62,6 @@ def format_muts(INPUT):
     dict_vars = {}
     sample_avgs = {}
     for i in df.keys():
-
         if i == "UK":
             temp_df = df[i].loc[df[i]["NucName+AAName"] != "A28095T|Orf8:K68Stop"]
             temp_df = temp_df.loc[df[i]["NucName+AAName"] != 'C14676T|Orf1b:P403P']
@@ -70,6 +69,7 @@ def format_muts(INPUT):
         elif i == "SA":
             temp_df = df[i].loc[df[i]["NucName+AAName"] != 'G22813T|S:K417N']
             df[i] = temp_df
+        df[i] = df[i]["NucName+AAName"].replace("NC", 0.0)
 
         cur_v = df[i]
         samples = list(cur_v.iloc[:, 13:].columns)
